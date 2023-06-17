@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser';
-// import { connectDB } from './config/db.js';
+import { connectDB } from './config/db.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middlewares/Error.middlewares.js';
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '3000mb' }));
 app.use(cors());
 
 // connect DB
-// connectDB();
+connectDB();
 
 app.use(errorHandler);
 
