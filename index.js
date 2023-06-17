@@ -24,15 +24,13 @@ connectDB();
 
 app.use(errorHandler);
 app.use('/api/users', userRouter);
-// app.use('/api/movies', movieRouter);
-// app.use('/api/categories', categoryRouter);
-// app.use('/api/upload', UploadRouter);
+app.use('/api/movies', movieRouter);
+app.use('/api/categories', categoryRouter);
+app.use('/api/upload', UploadRouter);
 
 app.get('/', (req, res) => {
     res.send('start server')
 });
-
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
