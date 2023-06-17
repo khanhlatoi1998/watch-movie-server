@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     res.send('start server')
 });
 
-// app.use('/api/users', userRouter);
+app.use('/api/users', userRouter);
 // app.use('/api/movies', movieRouter);
 // app.use('/api/categories', categoryRouter);
 // app.use('/api/upload', UploadRouter);
