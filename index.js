@@ -9,16 +9,18 @@ import movieRouter from './routes/Movies.router.js';
 import categoryRouter from './routes/Categories.router.js';
 import UploadRouter from './controllers/UploadFire.js';
 
-const PORT = process.env.PORT || 5000;
-const DELAY = 0;
-
 // dotenv.config();
+
+
 const app = express();
+const PORT = process.env.PORT || 5000;
+const jsonPaser = bodyParser.json();
+
 // limit required use 3000md
 app.use(bodyParser.json({ limit: '3000mb' }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '3000mb' }));
 app.use(cors());
 
-// connect DB
 // connectDB();
 
 // app.use(errorHandler);
