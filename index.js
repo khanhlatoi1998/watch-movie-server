@@ -19,7 +19,7 @@ app.use(bodyParser.json({ limit: '3000mb' }));
 app.use(cors());
 
 // connect DB
-connectDB();
+// connectDB();
 
 app.use(errorHandler);
 
@@ -27,10 +27,10 @@ app.get('/', (req, res) => {
     res.send('start server')
 });
 
-app.use('/api/users', userRouter);
-app.use('/api/movies', movieRouter);
-app.use('/api/categories', categoryRouter);
-app.use('/api/upload', UploadRouter);
+// app.use('/api/users', userRouter);
+// app.use('/api/movies', movieRouter);
+// app.use('/api/categories', categoryRouter);
+// app.use('/api/upload', UploadRouter);
 
 
 app.listen(PORT, () => {
