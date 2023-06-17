@@ -1,8 +1,8 @@
 import express from "express";
-// import multer from "multer";
-// import path from "path";
-// import { v4 as uuidv4 } from "uuid";
-// import storage from "../config/firebaseStorage.js";
+import multer from "multer";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
+import storage from "../config/firebaseStorage.js";
 
 const UploadRouter = express.Router();
 
