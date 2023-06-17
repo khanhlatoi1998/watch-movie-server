@@ -9,7 +9,7 @@ import express from 'express';
 // import categoryRouter from './routes/Categories.router.js';
 // import UploadRouter from './controllers/UploadFire.js';
 
-
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const jsonPaser = bodyParser.json();
