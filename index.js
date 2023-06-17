@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser';
-// import { connectDB } from './config/db.js';
+import { connectDB } from './config/db.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middlewares/Error.middlewares.js';
