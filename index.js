@@ -14,9 +14,10 @@ const DELAY = 0;
 
 dotenv.config();
 const app = express();
-app.use(cors());
 // limit required use 3000md
 app.use(bodyParser.json({ limit: '3000mb' }));
+app.use(cors());
+
 // connect DB
 connectDB();
 
