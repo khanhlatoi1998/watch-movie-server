@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '3000mb' }));
 app.use(cors());
 
 // connect DB
-connectDB();
+// connectDB();
 
 app.use(errorHandler);
 
