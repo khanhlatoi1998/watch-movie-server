@@ -9,31 +9,29 @@ import express from 'express';
 // import categoryRouter from './routes/Categories.router.js';
 // import UploadRouter from './controllers/UploadFire.js';
 
-// dotenv.config();
-
-
-const app = express();
 const PORT = process.env.PORT || 5000;
-const jsonPaser = bodyParser.json();
+const DELAY = 0;
 
+dotenv.config();
+const app = express();
 // limit required use 3000md
 app.use(bodyParser.json({ limit: '3000mb' }));
-app.use(bodyParser.urlencoded({ extended: false, limit: '3000mb' }));
 app.use(cors());
 
-// connectDB();
+// connect DB
+connectDB();
 
-// app.use(errorHandler);
+app.use(errorHandler);
+
+app.get('/', (req, res) => {
+    res.send('start server')
+});
 
 // app.use('/api/users', userRouter);
 // app.use('/api/movies', movieRouter);
 // app.use('/api/categories', categoryRouter);
 // app.use('/api/upload', UploadRouter);
 
-
-app.get('/', (req, res) => {
-    res.send('server start')
-});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
