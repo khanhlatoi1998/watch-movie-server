@@ -1,13 +1,6 @@
 import bodyParser from 'body-parser';
-import { connectDB } from './config/db.js';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import { errorHandler } from './middlewares/Error.middlewares.js';
 import express from 'express';
-import userRouter from './routes/Users.router.js';
-import movieRouter from './routes/Movies.router.js';
-import categoryRouter from './routes/Categories.router.js';
-import UploadRouter from './controllers/UploadFire.js';
 
 // dotenv.config();
 
@@ -25,15 +18,15 @@ app.use(cors());
 
 // app.use(errorHandler);
 
-app.get('/', (req, res) => {
-    res.send('start server')
-});
-
 // app.use('/api/users', userRouter);
 // app.use('/api/movies', movieRouter);
 // app.use('/api/categories', categoryRouter);
 // app.use('/api/upload', UploadRouter);
 
+
+app.get('/', (req, res) => {
+    res.send('server start')
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
