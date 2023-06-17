@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middlewares/Error.middlewares.js';
 import express from 'express';
-// import userRouter from './routes/Users.router.js';
+import userRouter from './routes/Users.router.js';
 // import movieRouter from './routes/Movies.router.js';
 // import categoryRouter from './routes/Categories.router.js';
 // import UploadRouter from './controllers/UploadFire.js';
@@ -23,15 +23,15 @@ app.use(cors());
 connectDB();
 
 app.use(errorHandler);
+app.use('/api/users', userRouter);
+// app.use('/api/movies', movieRouter);
+// app.use('/api/categories', categoryRouter);
+// app.use('/api/upload', UploadRouter);
 
 app.get('/', (req, res) => {
     res.send('start server')
 });
 
-app.use('/api/users', userRouter);
-// app.use('/api/movies', movieRouter);
-// app.use('/api/categories', categoryRouter);
-// app.use('/api/upload', UploadRouter);
 
 
 app.listen(PORT, () => {
