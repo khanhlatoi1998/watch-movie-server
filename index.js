@@ -12,7 +12,7 @@ import UploadRouter from './controllers/UploadFire.js';
 const PORT = process.env.PORT || 5000;
 const DELAY = 0;
 
-dotenv.config();
+// dotenv.config();
 const app = express();
 // limit required use 3000md
 app.use(bodyParser.json({ limit: '3000mb' }));
@@ -21,7 +21,7 @@ app.use(cors());
 // connect DB
 // connectDB();
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 app.get('/', (req, res) => {
     res.send('start server')
