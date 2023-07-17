@@ -9,7 +9,7 @@ const UploadRouter = express.Router();
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 500 * 1024 * 1024 // giới hạn dung lượng file là 5MB
+        fileSize: 50000 * 1024 * 1024 // giới hạn dung lượng file là 500MB
       }
 });
 
@@ -19,8 +19,8 @@ UploadRouter.post('/', upload.single('file'), async (req, res) => {
 
         if (file) {
             const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
-
-            const blob = storage.file(fileName);
+            const folderName = 'images';
+            const blob = storage.file(`${folderName}/${fileName}`);
  
             const blobStream = blob.createWriteStream({
                 // resumable: false,

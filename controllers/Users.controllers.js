@@ -3,12 +3,16 @@ import User from '../models/Users.models.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../middlewares/Auth.js';
 
+
+const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/images%2Fdefault-avatar.png?alt=media&token=bdd50c98-999e-4b94-a286-32ef29abc749';
+
+
 const registerUser = asyncHandler(async (req, res) => {
     const { fullName, email, password, image } = req.body.user;
     try {
         const useExists = await User.findOne({ email });
         if (useExists) {
-            res.status(400);
+            res.status(400)
             throw new Error('User already exists!');
         } else {
             const salt = bcrypt.genSalt(10, (err, salt) => {
@@ -19,7 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
                                 fullName,
                                 email,
                                 password: hash,
-                                image: image ? image : 'avatar'
+                                image: DEFAULT_AVATAR
                             });
 
                             if (user) {
@@ -75,6 +79,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         if (user) {
             user.fullName = fullName || user.fullName;
             user.email = email || user.email;
+            if (image !== user.image) {
+                
+            } else {
+
+            }
             user.image = image || user.image;
 
             const updateUser = await user.save();

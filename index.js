@@ -7,7 +7,7 @@ import express from 'express';
 import userRouter from './routes/Users.router.js';
 import movieRouter from './routes/Movies.router.js';
 import categoryRouter from './routes/Categories.router.js';
-import UploadRouter from './controllers/UploadFire.js';
+import UploadRouter from './controllers/UploadFile.js';
 
 dotenv.config();
 const app = express();
