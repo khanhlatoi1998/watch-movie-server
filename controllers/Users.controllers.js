@@ -2,9 +2,12 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/Users.models.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../middlewares/Auth.js';
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
+import storage from "../config/firebaseStorage.js";
 
 
-const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/images%2Fdefault-avatar.png?alt=media&token=bdd50c98-999e-4b94-a286-32ef29abc749';
+const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/images%2Fdefault-avatar.png?alt=media&token=29d9da6d-36bd-497d-9b16-5f5aca392c90';
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -73,28 +76,64 @@ const loginUser = asyncHandler(async (req, res, next) => {
 });
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-    const { email, fullName, image } = req.body.user;
+    const { email, fullName, image, _id } = req.body;
+    const file = req.file;
     try {
-        const user = await User.findById(req.user._id); // user is name of Schema created from Users
+        const user = await User.findById(_id); // user is name of Schema created from Users
         if (user) {
             user.fullName = fullName || user.fullName;
             user.email = email || user.email;
-            if (image !== user.image) {
-                
+            // user.image = image || user.image;
+            if (file && file !== '') {
+                // delete image when uploaded new image
+                // if (image !== DEFAULT_AVATAR) {
+                //     console.log(image);
+                //     let fileDelete = storage.file(image);
+                //     await fileDelete.delete();
+                // }
+                const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+                const folderName = 'images';
+                const blob = storage.file(`${folderName}/${fileName}`);
+
+                const blobStream = blob.createWriteStream({
+                    // resumable: false,
+                    metadata: {
+                        contentType: file.mimetype,
+                    },
+                });
+                blobStream.on('error', (error) => {
+                    res.status(400).json({ message: error.message });
+                })
+                blobStream.on('finish', () => {
+                    blob.getSignedUrl({
+                        action: 'read',
+                        expires: '03-17-2125'
+                    }).then(async (signedUrls) => {
+                        user.image = signedUrls[0];
+                        const updateUser = await user.save();
+                        res.status(200).json({
+                            _id: updateUser._id,
+                            fullName: updateUser.fullName,
+                            email: updateUser.email,
+                            image: updateUser.image,
+                            isAdmin: updateUser.isAdmin,
+                            token: generateToken(updateUser._id)
+                        });
+                    });
+                    const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${storage.name}/o/${fileName}?alt=media`;
+                });
+                blobStream.end(file.buffer);
             } else {
-
+                const updateUser = await user.save();
+                res.status(200).json({
+                    _id: updateUser._id,
+                    fullName: updateUser.fullName,
+                    email: updateUser.email,
+                    image: updateUser.image,
+                    isAdmin: updateUser.isAdmin,
+                    token: generateToken(updateUser._id)
+                });
             }
-            user.image = image || user.image;
-
-            const updateUser = await user.save();
-            res.status(200).json({
-                _id: updateUser._id,
-                fullName: updateUser.fullName,
-                email: updateUser.email,
-                image: updateUser.image,
-                isAdmin: updateUser.isAdmin,
-                token: generateToken(updateUser._id)
-            });
         } else {
             res.status(401);
             throw new Error('User not found');
