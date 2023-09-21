@@ -1,5 +1,8 @@
 import asyncHandler from 'express-async-handler';
 import Movies from '../models/Movies.models.js';
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
+import storage from "../config/firebaseStorage.js";
 
 const Movie = {
     name: "My Favorite Person",
@@ -21,16 +24,18 @@ const importMovies = asyncHandler(async (req, res) => {
         await Movies.deleteMany({});
         for (let i = 0; i < 20; i++) {
             MoviesData.push({
-                name: `My Favorite Person ${i}`,
-                desc: "Lorem ipsum dolor",
-                titleImage: "33.jpg",
-                image: "3.jpg",
-                category: `Adventure ${i}`,
-                language: "Korean",
-                year: "2000",
-                time: 11,
-                video: "",
+                movieTitle: `movie title ${i}`,
+                hours: Number(i),
+                language: '',
+                year: 2002,
+                movieDescription: '',
+                movieCategory: '',
+                casts: [],
                 rate: Number(i),
+                numberOfReviews: Number(i),
+                imageWithTitle: '',
+                imageWithThumbnail: '',
+                video: '',
             })
         }
         const movies = await Movies.insertMany(MoviesData);
@@ -106,12 +111,13 @@ const getTopRatedMovies = asyncHandler(async (req, res) => {
 const getRandomMovies = asyncHandler(async (req, res) => {
     try {
         // find random movies
+        console.log('getRandomMovies');
         const movies = await Movies.aggregate([{ $sample: { size: 8 } }]);
         res.json(movies);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-});
+}); 
 
 const createMovieReview = asyncHandler(async (req, res) => {
     const { rating, comment } = req.body;
@@ -224,46 +230,73 @@ const deleteAllMovies = asyncHandler(async (req, res) => {
 const createMovie = asyncHandler(async (req, res) => {
     try {
         const {
-            name,
-            desc,
-            image,
-            titleImage,
-            rate,
-            numberOfReviews,
-            category,
-            time,
+            movieTitle,
+            hours,
             language,
             year,
-            video,
-            casts,
+            movieDescription,
+            movieCategory,
+            rate,
+            reviews,
+            numberOfReviews,
+            imageWithTitleValue,
+            imageWithThumbnailValue,
         } = req.body;
+        const casts = JSON.parse(req.body.casts);
+        const file = req.files[0];
+        console.log(Object.keys(req.body).length);
+        if (file) {
+            const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+            const folderName = 'videos';
+            const blob = storage.file(`${folderName}/${fileName}`);
 
-        const movie = new Movies({
-            name,
-            desc,
-            image,
-            titleImage,
-            rate,
-            numberOfReviews,
-            category,
-            time,
-            language,
-            year,
-            video,
-            casts,
-            userId: req.user._id
-        });
+            const blobStream = blob.createWriteStream({
+                // resumable: false,
+                metadata: {
+                    contentType: file.mimetype,
+                },
+            });
 
-        if (movie) {
-            const createMovie = await movie.save();
-            res.status(201).json(createMovie)
+            blobStream.on('error', (error) => {
+                res.status(400).json({ message: error.message });
+            })
+            blobStream.on('finish', () => {
+                blob.getSignedUrl({
+                    action: 'read',
+                    expires: '03-17-2125'
+                }).then(async (signedUrls) => {
+                    const video = signedUrls[0];
+                    const movie = new Movies({
+                        movieTitle,
+                        hours,
+                        language,
+                        year,
+                        movieDescription,
+                        movieCategory,
+                        rate,
+                        numberOfReviews,
+                        imageWithTitleValue,
+                        imageWithThumbnailValue,
+                        reviews,
+                        casts,
+                        video,
+                        userId: req.user._id
+                    });
+                    if (movie) {
+                        const createMovie = await movie.save();
+                        res.status(201).json(createMovie)
+                    } else {
+                        res.status(400);
+                        throw new Error("Invalid movie data");
+                    }
+                });
+            });
+            blobStream.end(file.buffer);
         } else {
-            res.status(400);
-            throw new Error("Invalid movie data");
+            res.status(400).json({ message: "Please upload a file" });
         }
-
     } catch (error) {
-        res.status(400).json({ message: error.message })
+        res.status(400).json({ message: error.message });
     }
 });
 
@@ -277,6 +310,6 @@ export {
     createMovieReview,
     updateMovie,
     deleteMovie,
-    deleteAllMovies, 
+    deleteAllMovies,
     createMovie
 }

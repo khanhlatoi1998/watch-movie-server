@@ -16,7 +16,6 @@ const upload = multer({
 UploadRouter.post('/', upload.single('file'), async (req, res) => {
     try {
         const file = req.file;
-
         if (file) {
             const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
             const folderName = 'images';
@@ -33,8 +32,14 @@ UploadRouter.post('/', upload.single('file'), async (req, res) => {
                 res.status(400).json({ message: error.message });
             })
             blobStream.on('finish', () => {
-                const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${storage.name}/o/${fileName}?alt=media`;
-                res.status(200).json(publicUrl);
+                blob.getSignedUrl({
+                    action: 'read',
+                    expires: '03-17-2125'
+                }).then(async (signedUrls) => {
+                    res.status(200).json(signedUrls[0]);
+                });
+                // const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${storage.name}/o/${fileName}?alt=media`;
+                // res.status(200).json(publicUrl);
             });
             blobStream.end(file.buffer);
         } else {

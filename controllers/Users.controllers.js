@@ -83,57 +83,16 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         if (user) {
             user.fullName = fullName || user.fullName;
             user.email = email || user.email;
-            // user.image = image || user.image;
-            if (file && file !== '') {
-                // delete image when uploaded new image
-                // if (image !== DEFAULT_AVATAR) {
-                //     console.log(image);
-                //     let fileDelete = storage.file(image);
-                //     await fileDelete.delete();
-                // }
-                const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
-                const folderName = 'images';
-                const blob = storage.file(`${folderName}/${fileName}`);
-
-                const blobStream = blob.createWriteStream({
-                    // resumable: false,
-                    metadata: {
-                        contentType: file.mimetype,
-                    },
-                });
-                blobStream.on('error', (error) => {
-                    res.status(400).json({ message: error.message });
-                })
-                blobStream.on('finish', () => {
-                    blob.getSignedUrl({
-                        action: 'read',
-                        expires: '03-17-2125'
-                    }).then(async (signedUrls) => {
-                        user.image = signedUrls[0];
-                        const updateUser = await user.save();
-                        res.status(200).json({
-                            _id: updateUser._id,
-                            fullName: updateUser.fullName,
-                            email: updateUser.email,
-                            image: updateUser.image,
-                            isAdmin: updateUser.isAdmin,
-                            token: generateToken(updateUser._id)
-                        });
-                    });
-                    const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${storage.name}/o/${fileName}?alt=media`;
-                });
-                blobStream.end(file.buffer);
-            } else {
-                const updateUser = await user.save();
-                res.status(200).json({
-                    _id: updateUser._id,
-                    fullName: updateUser.fullName,
-                    email: updateUser.email,
-                    image: updateUser.image,
-                    isAdmin: updateUser.isAdmin,
-                    token: generateToken(updateUser._id)
-                });
-            }
+            user.image = image || user.image;
+            const updateUser = await user.save();
+            res.status(200).json({
+                _id: updateUser._id,
+                fullName: updateUser.fullName,
+                email: updateUser.email,
+                image: updateUser.image,
+                isAdmin: updateUser.isAdmin,
+                token: generateToken(updateUser._id)
+            });
         } else {
             res.status(401);
             throw new Error('User not found');

@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from "multer";
 import {
     createMovie,
     createMovieReview,
@@ -12,6 +13,13 @@ import {
     updateMovie
 } from '../controllers/Movies.controllers.js';
 import { protect, admin } from '../middlewares/Auth.js';
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 50000 * 1024 * 1024 // giới hạn dung lượng file là 500MB
+      }
+});
 
 const router = express.Router();
 
@@ -29,7 +37,7 @@ router.post('/:id/review', protect, createMovieReview);
 router.put('/:id', protect, admin, updateMovie);
 router.delete('/:id', protect, admin, deleteMovie);
 router.delete('/', protect, admin, deleteAllMovies);
-router.post('/', protect, admin, createMovie);
+router.post('/create', protect, admin, upload.any(), createMovie);
 
 
 

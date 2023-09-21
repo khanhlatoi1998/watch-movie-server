@@ -23,57 +23,69 @@ const moviesSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
-        name: {
+        movieTitle: {
             type: String,
-            required: true
+            // required: true
         },
-        desc: {
+        movieDescription: {
             type: String,
-            required: true
+            // required: true
         },
-        titleImage: {
+        movieCategory: {
             type: String,
-            required: true
+            // required: true
         },
-        image: {
+        imageWithTitleValue: {
             type: String,
-            required: true
+            // required: true
         },
-        category: {
+        imageWithThumbnailValue: {
             type: String,
-            required: true
+            // required: true
         },
         language: {
             type: String,
-            required: true
+            // required: true
         },
         year: {
-            type: Number,
-            required: true
+            type: String,
+            // required: true
         },
-        time: {
-            type: Number,
-            required: true
+        hours: {
+            type: String,
+            // required: true
         },
         video: {
             type: String,
-            required: true
+            // required: true
         },
         rate: {
-            type: Number,
+            type: String,
             required: true,
             default: 0
         },
         numberOfReviews: {
-            type: Number,
+            type: String,
             required: true,
             default: 0
         },
-        reviews: [reviewSchema],
+        ////////////////////////////////////////////////////////
+        reviews: {
+            type: Array,
+            default: [1, 3],
+            required: false,
+            reviews: [reviewSchema]
+        },
         casts: [
             {
-                name: { type: String, required: true },
-                image: { type: String, required: true }
+                nameCast: {
+                    type: String,
+                    required: true
+                },
+                imgCast: {
+                    type: String,
+                    required: true
+                }
             }
         ]
     },
