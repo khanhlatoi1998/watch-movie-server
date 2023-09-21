@@ -24,7 +24,9 @@ connectDB();
 
 app.use(errorHandler);
 app.use('/api/users', userRouter);
-app.use('/api/movies', movieRouter);
+app.use('/api/movies', (req, res) => {
+    res.send('start server')
+});
 app.use('/api/categories', categoryRouter);
 app.use('/api/upload', UploadRouter);
 
