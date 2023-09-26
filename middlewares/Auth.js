@@ -4,12 +4,13 @@ import User from '../models/Users.models.js';
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: "100d",
+        expiresIn: "300d",
     });
 };
 
 const protect = asyncHandler(async (req, res, next) => {
     let token;
+    console.log('protect')
     if (
         req.headers.authorization &&
         req.headers.authorization.startsWith("Bearer"))

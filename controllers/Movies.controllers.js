@@ -80,6 +80,18 @@ const getMovies = asyncHandler(async (req, res) => {
     }
 });
 
+const getAllMovies = asyncHandler(async (req, res) => {
+    try {
+
+        const movies = await Movies.find({})
+
+        res.status(200).json(movies);
+    } catch (error) {
+        console.log(error)
+        res.status(404).json({ message: error.message })
+    }
+});
+
 const getMovieById = asyncHandler(async (req, res) => {
     try {
         console.log(req.params.id)
@@ -117,29 +129,41 @@ const getRandomMovies = asyncHandler(async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}); 
+});
+
+const getRelatedMovies = asyncHandler(async (req, res) => {
+    try {
+        // find random movies
+        console.log('getRandomMovies');
+        const movies = await Movies.aggregate([{ $sample: { size: 8 } }]);
+        res.json(movies);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
 
 const createMovieReview = asyncHandler(async (req, res) => {
-    const { rating, comment } = req.body;
+    const { rating, message } = req.body;
+    console.log(req.params.id)
     try {
         const movie = await Movies.findById(req.params.id);
         console.log(req.user);
         if (movie) {
-            const alreadyReviewed = movie.reviews.find(
-                (r) => r.userId.toString() === req.user._id.toString()
-            );
+            // const alreadyReviewed = movie.reviews.find(
+            //     (r) => r.userId.toString() === req.user._id.toString()
+            // );
 
-            if (alreadyReviewed) {
-                // res.status(400);
-                // throw new Error('You already reviewed this movie');
-            }
+            // if (alreadyReviewed) {
+            //     // res.status(400);
+            //     // throw new Error('You already reviewed this movie');
+            // }
 
             const review = {
                 userName: req.user.fullName,
                 userImage: req.user.image,
                 userId: req.user._id,
                 rating: Number(rating),
-                comment: comment
+                message: message
             }
 
             movie.reviews.push(review);
@@ -147,10 +171,10 @@ const createMovieReview = asyncHandler(async (req, res) => {
             movie.rate = movie.reviews.reduce((acc, item) => item.rating + acc, 0) / movie.reviews.length;
 
             await movie.save();
-            res.status(201).json({ message: 'Review added' });
+            res.status(201).json(movie.reviews);
         } else {
             res.status(400);
-            throw new Error('Moview not found');
+            throw new Error('Movie not found');
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -244,7 +268,7 @@ const createMovie = asyncHandler(async (req, res) => {
         } = req.body;
         const casts = JSON.parse(req.body.casts);
         const file = req.files[0];
-        console.log(Object.keys(req.body).length);
+        console.log(req.body);
         if (file) {
             const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
             const folderName = 'videos';
@@ -304,9 +328,11 @@ const createMovie = asyncHandler(async (req, res) => {
 export {
     importMovies,
     getMovies,
+    getAllMovies,
     getMovieById,
     getTopRatedMovies,
     getRandomMovies,
+    getRelatedMovies,
     createMovieReview,
     updateMovie,
     deleteMovie,

@@ -23,7 +23,7 @@ const UserSchema = mongoose.Schema(
         },
         isAdmin: {
             type: Boolean,
-            default: false
+            default: true
         },
         likedMovies: [
             {

@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import storage from "../config/firebaseStorage.js";
 
 
-const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/images%2Fdefault-avatar.png?alt=media&token=29d9da6d-36bd-497d-9b16-5f5aca392c90';
+const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/default-avatar.png?alt=media&token=2f6b10b3-b638-4153-8d83-b96933f26deb';
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -234,5 +234,5 @@ export {
     addLikeMovies,
     deleteLikedMovies,
     getUsers,
-    deleteUser
+    deleteUser,
 };

@@ -5,7 +5,7 @@ const reviewSchema = mongoose.Schema(
         userName: { type: String, required: true },
         userImage: { type: String },
         rating: { type: Number, required: true },
-        comment: { type: String, required: true },
+        message: { type: String, required: true },
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -62,17 +62,16 @@ const moviesSchema = mongoose.Schema(
         rate: {
             type: String,
             required: true,
-            default: 0
+            default: 4
         },
         numberOfReviews: {
-            type: String,
+            type: Number,
             required: true,
             default: 0
         },
-        ////////////////////////////////////////////////////////
         reviews: {
             type: Array,
-            default: [1, 3],
+            default: [],
             required: false,
             reviews: [reviewSchema]
         },

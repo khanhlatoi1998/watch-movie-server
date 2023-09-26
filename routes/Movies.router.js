@@ -5,9 +5,11 @@ import {
     createMovieReview,
     deleteAllMovies,
     deleteMovie,
+    getAllMovies,
     getMovieById,
     getMovies,
     getRandomMovies,
+    getRelatedMovies,
     getTopRatedMovies,
     importMovies,
     updateMovie
@@ -26,9 +28,11 @@ const router = express.Router();
 // ********* PUBLIC ROUTER **********
 router.post('/import', importMovies);
 router.get('/', getMovies);
+router.get('/all', getAllMovies);
 router.get('/:id', getMovieById);
 router.get('/rated/top', getTopRatedMovies);
 router.get('/ramdom/all', getRandomMovies);
+router.get('/related', getRelatedMovies);
 
 // ******** PRIVATE ROUTER ********* 
 router.post('/:id/review', protect, createMovieReview);
