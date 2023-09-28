@@ -35,7 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
                                     email: user.email,
                                     fullName: user.fullName,
                                     image: user.image,
-                                    isAdmin: user.isAdmin,
+                                    isAdmin: true,
                                     token: generateToken(user._id)
                                 })
                             } else {
@@ -157,11 +157,12 @@ const getLikeMovies = asyncHandler(async (req, res) => {
 });
 
 const addLikeMovies = asyncHandler(async (req, res) => {
-    const { movieId } = req.body.user;
+    const { movieId } = req.body;
     try {
         const user = await User.findById(req.user._id);
         if (user) {
             if (user.likedMovies.includes(movieId)) {
+                console.log(user);
                 res.status(400);
                 throw new Error('Movie already liked')
             } else {
