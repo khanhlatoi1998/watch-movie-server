@@ -21,13 +21,13 @@ const registerUser = asyncHandler(async (req, res) => {
                 if (!err) {
                     bcrypt.hash(password, salt, async (err, hash) => {
                         if (!err) {
-                            const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/default-avatar.png?alt=media&token=2f6b10b3-b638-4153-8d83-b96933f26deb';
+                            const image = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/default-avatar.png?alt=media&token=2f6b10b3-b638-4153-8d83-b96933f26deb';
                             const user = await User.create({
                                 fullName,
                                 email,
                                 password: hash,
+                                image,
                                 isAdmin: true,
-                                image: 'img',
                             });
 
                             if (user) {
