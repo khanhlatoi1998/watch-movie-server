@@ -7,10 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 import storage from "../config/firebaseStorage.js";
 
 
+const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/default-avatar.png?alt=media&token=2f6b10b3-b638-4153-8d83-b96933f26deb';
 
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { fullName, email, password } = req.body.user;
+    const { fullName, email, password, image } = req.body.user;
     try {
         const useExists = await User.findOne({ email });
         if (useExists) {
@@ -21,23 +22,21 @@ const registerUser = asyncHandler(async (req, res) => {
                 if (!err) {
                     bcrypt.hash(password, salt, async (err, hash) => {
                         if (!err) {
-                            const image = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/default-avatar.png?alt=media&token=2f6b10b3-b638-4153-8d83-b96933f26deb';
                             const user = await User.create({
                                 fullName,
                                 email,
                                 password: hash,
-                                image,
-                                isAdmin: true,
+                                image: DEFAULT_AVATAR
                             });
 
                             if (user) {
                                 res.status(201).json({
-                                    // _id: user._id,
-                                    // email: user.email,
-                                    // fullName: user.fullName,
-                                    // image: user.image,
-                                    // isAdmin: true,
-                                    // token: generateToken(user._id)
+                                    _id: user._id,
+                                    email: user.email,
+                                    fullName: user.fullName,
+                                    image: user.image,
+                                    isAdmin: true,
+                                    token: generateToken(user._id)
                                 })
                             } else {
                                 res.status(400);
