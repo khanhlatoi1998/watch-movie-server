@@ -12,7 +12,6 @@ import UploadRouter from './controllers/UploadFile.js';
 // dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
-const jsonPaser = bodyParser.json();
 
 // limit required use 3000md
 app.use(bodyParser.json({ limit: '3000mb' }));
