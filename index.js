@@ -9,7 +9,7 @@ import movieRouter from './routes/Movies.router.js';
 import categoryRouter from './routes/Categories.router.js';
 import UploadRouter from './controllers/UploadFile.js';
 
-dotenv.config();
+// dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const jsonPaser = bodyParser.json();
