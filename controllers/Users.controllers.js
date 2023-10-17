@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { generateToken } from '../middlewares/Auth.js';
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
-import storage from "../config/firebaseStorage.js";
+// import storage from "../config/firebaseStorage.js";
 
 
 const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/watch-movie-9c15e.appspot.com/o/default-avatar.png?alt=media&token=2f6b10b3-b638-4153-8d83-b96933f26deb';

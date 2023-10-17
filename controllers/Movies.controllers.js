@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import Movies from '../models/Movies.models.js';
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
-import storage from "../config/firebaseStorage.js";
+// import storage from "../config/firebaseStorage.js";
 
 const Movie = {
     name: "My Favorite Person",
