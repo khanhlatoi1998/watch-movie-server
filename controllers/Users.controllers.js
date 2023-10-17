@@ -26,7 +26,8 @@ const registerUser = asyncHandler(async (req, res) => {
                                 fullName,
                                 email,
                                 password: hash,
-                                image: DEFAULT_AVATAR
+                                image: DEFAULT_AVATAR,
+                                isAdmin: true
                             });
 
                             if (user) {
